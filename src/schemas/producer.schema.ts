@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
 const ProducerSchema = new mongoose.Schema(
   {
@@ -8,9 +8,9 @@ const ProducerSchema = new mongoose.Schema(
     secondaryNumber: String,
     address: String,
     description: String,
-    categories: [String], // e.g. ['skirt', 'croptop']
+    categories: [String] // e.g. ['skirt', 'croptop']
   },
   { timestamps: true }
-);
+)
 
-export const ProducerModel = mongoose.model("Producer", ProducerSchema);
+export const ProducerModel = mongoose.model('Producer', ProducerSchema)

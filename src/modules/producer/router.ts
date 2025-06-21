@@ -1,9 +1,10 @@
-import { Router } from "express";
-import { createProducer, getAllProducers } from "./handler";
+import { Router } from 'express'
 
-const router = Router();
+import { createProducer, getAllProducers } from './handler'
 
-router.post("/", createProducer);
-router.get("/", getAllProducers);
+const router = Router()
 
-export default router;
+router.post('/', createProducer)
+router.get('/', getAllProducers)
+
+export default router
