@@ -16,7 +16,7 @@ module.exports = {
     es2020: true
   },
   rules: {
-    'no-console': 'off',
+    'no-console': 'error',
     'no-undef': 'off',
     'import/order': 'off',
     'prettier/prettier': [

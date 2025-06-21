@@ -12,10 +12,10 @@ export const loadRouters = (app: Express): void => {
     const env = isDevelopment ? 'development (tsx)' : 'production (compiled)'
     const routerExtension = isDevelopment ? 'router.ts' : 'router.js'
 
+    // eslint-disable-next-line no-console
     console.log(`📍 Environment: ${env}`)
 
     if (!fs.existsSync(modulesDir)) {
-      console.warn(`Modules directory not found: ${modulesDir}`)
       return
     }
 
@@ -27,7 +27,6 @@ export const loadRouters = (app: Express): void => {
       const routerPath = path.join(modulePath, routerExtension)
 
       if (!fs.existsSync(routerPath)) {
-        console.warn(`Router file not found for module '${moduleDir.name}': ${routerExtension}`)
         return
       }
 
@@ -36,18 +35,18 @@ export const loadRouters = (app: Express): void => {
         const router = routerModule.default || routerModule
 
         if (!router) {
-          console.warn(`No default export found in router file: ${routerPath}`)
           return
         }
 
         const routePath = `/api/${moduleDir.name}`
         app.use(routePath, router)
-        console.log(`Loaded router: ${routePath}`)
       } catch (err) {
+        // eslint-disable-next-line no-console
         console.error(`Failed to load router at ${routerPath}`, err)
       }
     })
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Failed to load routers:', error)
   }
 }

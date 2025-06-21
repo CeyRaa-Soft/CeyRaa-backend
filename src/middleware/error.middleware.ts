@@ -12,8 +12,6 @@ export const errorHandler = (
   res: Response,
   _next: NextFunction
 ) => {
-  console.error('[❌ ERROR]', err)
-
   // Handle Mongoose CastError (invalid ObjectId)
   if (err instanceof mongoose.Error.CastError) {
     return res.status(400).json({
