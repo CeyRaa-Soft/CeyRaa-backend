@@ -1,3 +1,18 @@
+// Path resolver setup - MUST be at the very top before any other imports
+import "module-alias/register";
+import * as moduleAlias from "module-alias";
+import * as path from "path";
+
+// Set up path aliases for the compiled JavaScript
+moduleAlias.addAliases({
+  "@": path.join(__dirname),
+  "@schemas": path.join(__dirname, "schemas"),
+  "@common": path.join(__dirname, "common"),
+  "@modules": path.join(__dirname, "modules"),
+  "@services": path.join(__dirname, "common/services"),
+});
+
+// Your existing imports
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";

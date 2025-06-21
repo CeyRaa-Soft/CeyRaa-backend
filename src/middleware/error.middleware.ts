@@ -8,7 +8,7 @@ export interface AppError extends Error {
 
 export const errorHandler = (
   err: AppError,
-  req: Request,
+  _nextreq: Request,
   res: Response,
   _next: NextFunction
 ) => {
