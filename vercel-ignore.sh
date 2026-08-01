@@ -8,4 +8,5 @@ if [ "$VERCEL_GIT_COMMIT_REF" = "main" ] || [ "$VERCEL_GIT_COMMIT_REF" = "test" 
 else
   echo "Skipping deployment"
   exit 0
+  
 fi
