@@ -1,4 +1,4 @@
-import clientPromise from '@/lib/mongodb'
+import clientPromise from './mongodb'
 
 export async function getCollection(collectionName: string) {
   const client = await clientPromise

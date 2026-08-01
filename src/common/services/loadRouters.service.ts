@@ -1,5 +1,5 @@
 import { Express } from 'express'
-import adminRouter from '@/modules/admin/router'
+import adminRouter from '../../modules/admin/router'
 
 export const loadRouters = (app: Express): void => {
   // eslint-disable-next-line no-console

@@ -6,8 +6,12 @@ import {
   getOrderById,
   updateOrder,
   deleteOrder
-} from '@/repositories/order.repository'
-import { createDesign, getDesignById, updateDesign } from '@/repositories/inventory.repository'
+} from '../../../repositories/order.repository'
+import {
+  createDesign,
+  getDesignById,
+  updateDesign
+} from '../../../repositories/inventory.repository'
 
 const router = Router()
 
