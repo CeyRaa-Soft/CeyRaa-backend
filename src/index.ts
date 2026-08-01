@@ -29,6 +29,17 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+// Custom Logger Middleware to print api hits in the terminal
+app.use((req, _res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`)
+  next()
+})
+
+// Root health check route (responds to http://localhost:3001/health)
+app.get('/health', (_req, res) => {
+  res.json({ status: 'healthy', timestamp: new Date().toISOString() })
+})
+
 connectDB()
 
 // Auto-load all module routers
@@ -37,7 +48,12 @@ loadRouters(app)
 // Global error handler
 app.use(errorHandler as ErrorRequestHandler)
 
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`)
-})
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 3001
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`)
+  })
+}
+
+export default app
+

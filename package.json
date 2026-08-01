@@ -11,22 +11,28 @@
     "build": "tsc",
     "lint": "eslint . --ext .js,.ts,.tsx --fix --ignore-pattern dist --ignore-pattern node_modules",
     "format": "prettier --write './**/*.{js,ts,tsx,json,md}'",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "create:migration": "ts-node src/migrations/scripts/create-migration.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cloudinary": "^2.10.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^4.21.1",
     "module-alias": "^2.2.3",
-    "mongoose": "^8.16.0"
+    "mongodb": "^7.5.0",
+    "mongoose": "^8.16.0",
+    "multer": "^2.2.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^4.17.21",
     "@types/module-alias": "^2.0.4",
+    "@types/multer": "^2.2.0",
     "@types/node": "^24.0.3",
     "@typescript-eslint/eslint-plugin": "^8.34.1",
     "@typescript-eslint/parser": "^8.34.1",
@@ -36,6 +42,7 @@
     "eslint-plugin-prettier": "^5.5.0",
     "eslint-plugin-unused-imports": "^4.1.4",
     "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
     "tsx": "^4.7.0",
     "typescript": "^5.8.3"
   }
