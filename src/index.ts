@@ -1,3 +1,7 @@
+/* eslint-disable no-console */
+// Load env first so that all subsequent imports have access to environment variables immediately
+import './load-env'
+
 // Path resolver setup - MUST be at the very top before any other imports
 import 'module-alias/register'
 import * as path from 'path'
@@ -17,13 +21,10 @@ moduleAlias.addAliases({
 // Your existing imports
 import express from 'express'
 import cors from 'cors'
-import dotenv from 'dotenv'
 
 import connectDB from './common/services/db.service'
 import { loadRouters } from './common/services/loadRouters.service'
 import { errorHandler } from './middleware/error.middleware'
-
-dotenv.config()
 
 const app = express()
 app.use(cors())
@@ -56,4 +57,3 @@ if (!process.env.VERCEL) {
 }
 
 export default app
-

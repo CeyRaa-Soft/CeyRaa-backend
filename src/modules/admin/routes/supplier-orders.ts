@@ -135,7 +135,7 @@ router.post('/:id/add-to-inventory', async (req, res, next) => {
 
     // Process each mapping
     for (const mapping of mappings) {
-      const { orderItemId, action, categoryId, designId, name, code, images } = mapping
+      const { orderItemId, action, categoryId, designId, name, code, images, variants } = mapping
 
       // Find the item in the order's production category
       const productionCategory = order.categories?.find((c) => c.id === 'production')
@@ -147,13 +147,16 @@ router.post('/:id/add-to-inventory', async (req, res, next) => {
         })
       }
 
+      // Use custom variants from mapping if provided, otherwise default to item.variants
+      const variantsToUse = variants && Array.isArray(variants) ? variants : item.variants
+
       if (action === 'create') {
-        // Create new design with the quantities from this order item
+        // Create new design with the quantities and custom selling prices
         await createDesign({
           name: name || item.name,
           categoryId,
           code: code || undefined,
-          variants: item.variants, // Quantities and sizes from order
+          variants: variantsToUse, // Quantities, sizes, and custom selling prices
           images: images || []
         })
       } else if (action === 'merge') {
@@ -174,7 +177,7 @@ router.post('/:id/add-to-inventory', async (req, res, next) => {
         // Merge logic for variants
         const mergedVariants = [...(design.variants || [])]
 
-        for (const orderVar of item.variants) {
+        for (const orderVar of variantsToUse) {
           const existingVarIdx = mergedVariants.findIndex(
             (v) => v.color.toLowerCase() === orderVar.color.toLowerCase()
           )
