@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import clientPromise from '@/lib/mongodb'
+import clientPromise from '../../../lib/mongodb'
 
 const router = Router()
 

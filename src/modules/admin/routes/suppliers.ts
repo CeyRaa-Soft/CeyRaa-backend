@@ -6,7 +6,7 @@ import {
   getSupplierById,
   updateSupplier,
   deleteSupplier
-} from '@/repositories/supplier.repository'
+} from '../../../repositories/supplier.repository'
 
 const router = Router()
 

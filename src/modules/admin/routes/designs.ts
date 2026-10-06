@@ -7,7 +7,7 @@ import {
   getDesignById,
   updateDesign,
   deleteDesign
-} from '@/repositories/inventory.repository'
+} from '../../../repositories/inventory.repository'
 
 const router = Router()
 

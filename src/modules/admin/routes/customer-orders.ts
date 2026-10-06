@@ -6,8 +6,8 @@ import {
   getCustomerOrderById,
   updateCustomerOrder,
   deleteCustomerOrder
-} from '@/repositories/customer-order.repository'
-import { getDesignById, adjustDesignStock } from '@/repositories/inventory.repository'
+} from '../../../repositories/customer-order.repository'
+import { getDesignById, adjustDesignStock } from '../../../repositories/inventory.repository'
 
 const router = Router()
 

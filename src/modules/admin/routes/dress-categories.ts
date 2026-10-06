@@ -6,7 +6,7 @@ import {
   getDressCategoryById,
   updateDressCategory,
   deleteDressCategory
-} from '@/repositories/inventory.repository'
+} from '../../../repositories/inventory.repository'
 
 const router = Router()
 
