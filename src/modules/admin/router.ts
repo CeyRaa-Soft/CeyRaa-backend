@@ -10,7 +10,6 @@ import uploadRouter from './routes/upload'
 const router = Router()
 
 router.use('/health', healthRouter)
-
 router.use('/dress-categories', categoryRouter)
 router.use('/designs', designRouter)
 router.use('/customer-orders', customerOrderRouter)
