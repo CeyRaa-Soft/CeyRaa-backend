@@ -6,6 +6,7 @@ import customerOrderRouter from './routes/customer-orders'
 import supplierRouter from './routes/suppliers'
 import supplierOrderRouter from './routes/supplier-orders'
 import uploadRouter from './routes/upload'
+import collectionRouter from './routes/collections'
 
 const router = Router()
 
@@ -16,5 +17,6 @@ router.use('/customer-orders', customerOrderRouter)
 router.use('/suppliers', supplierRouter)
 router.use('/supplier-orders', supplierOrderRouter)
 router.use('/upload', uploadRouter)
+router.use('/collections', collectionRouter)
 
 export default router

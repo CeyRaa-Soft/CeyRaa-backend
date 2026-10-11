@@ -13,6 +13,23 @@ export type DesignImage = {
   publicId?: string
 }
 
+export type DesignOffer = {
+  active: boolean
+  discountPercentage: number // e.g. 10 for 10%
+  originalPrice: number
+  offerPrice: number
+  startDate?: string
+}
+
+export type Collection = {
+  id: string
+  name: string
+  description?: string
+  imageUrl?: string
+  createdAt?: string
+  updatedAt?: string
+}
+
 export type Design = {
   id: string // unique database ID
   code: string // readable unique short code, e.g., "SHRT001"
@@ -20,5 +37,11 @@ export type Design = {
   name: string // e.g., "Floral crop top"
   variants: ColorVariant[] // colors and sizes with quantities
   images: DesignImage[] // images uploaded for each color variant
+  mediaVideoUrl?: string | null // Video or GIF showcase
+  mediaVideoPublicId?: string | null
+  defaultCollection?: "Queen's Wardrobe" | "King's Wardrobe" | null
+  customCollection?: string | null // name of custom collection
+  offer?: DesignOffer | null
   createdAt?: string
+  updatedAt?: string
 }

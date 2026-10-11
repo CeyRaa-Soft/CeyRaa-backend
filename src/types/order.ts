@@ -7,6 +7,8 @@ export type SizeInfo = {
 export type ColorVariant = {
   id: string
   color: string
+  swatchUrl?: string
+  swatchPublicId?: string
   sizes: SizeInfo[]
 }
 

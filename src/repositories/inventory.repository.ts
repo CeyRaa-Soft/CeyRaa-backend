@@ -187,7 +187,22 @@ export async function updateDesign(id: string, data: Partial<Design>): Promise<D
   const { id: _, code: __, categoryId: ___, createdAt: ____, ...updateData } = data as any
   const collection = await getCollection(DESIGN_COLLECTION)
 
+  updateData.updatedAt = new Date().toISOString()
   await collection.updateOne({ id }, { $set: updateData })
+
+  // If customCollection was updated or present, bump collection updatedAt
+  if (updateData.customCollection) {
+    try {
+      const colCollection = await getCollection('collections')
+      await colCollection.updateOne(
+        { name: updateData.customCollection },
+        { $set: { updatedAt: new Date().toISOString() } }
+      )
+    } catch (e) {
+      // ignore
+    }
+  }
+
   return getDesignById(id)
 }
 
@@ -223,4 +238,74 @@ export async function adjustDesignStock(
 
   await collection.updateOne({ id: designId }, { $set: { variants: updatedVariants } })
   return true
+}
+
+/* ==========================================================================
+   Custom Collections Repository Operations
+   ========================================================================== */
+const COLLECTIONS_COLLECTION = 'collections'
+
+export async function getCollections(): Promise<(any & { designCount: number; latestDesignImage?: string })[]> {
+  const collection = await getCollection(COLLECTIONS_COLLECTION)
+  const designCol = await getCollection(DESIGN_COLLECTION)
+
+  // Fetch collections sorted by updatedAt desc or createdAt desc
+  const docs = await collection.find({}).sort({ updatedAt: -1, createdAt: -1 }).toArray()
+  const allDesigns = await designCol.find({}).sort({ updatedAt: -1, createdAt: -1 }).toArray()
+
+  const cleanCollections = docs.map(cleanDoc).filter(Boolean) as any[]
+
+  return cleanCollections.map((col) => {
+    const colNameLower = (col.name || '').trim().toLowerCase()
+    const matchingDesigns = allDesigns.filter((d) => {
+      if (!d.customCollection) return false
+      const dCol = String(d.customCollection).trim().toLowerCase()
+      return dCol === colNameLower || dCol === String(col.id).toLowerCase()
+    })
+    const latestImage =
+      matchingDesigns.find((d) => d.images && d.images.length > 0)?.images?.[0]?.url ||
+      col.imageUrl ||
+      undefined
+
+    return {
+      ...col,
+      designCount: matchingDesigns.length,
+      latestDesignImage: latestImage
+    }
+  })
+}
+
+export async function getCollectionById(id: string): Promise<any | null> {
+  const collection = await getCollection(COLLECTIONS_COLLECTION)
+  const doc = await collection.findOne({ id })
+  return cleanDoc(doc)
+}
+
+export async function createCollection(data: { name: string; description?: string; imageUrl?: string }): Promise<any> {
+  const collection = await getCollection(COLLECTIONS_COLLECTION)
+  const now = new Date().toISOString()
+  const newCol = {
+    id: `col_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+    name: data.name.trim(),
+    description: data.description || '',
+    imageUrl: data.imageUrl || '',
+    createdAt: now,
+    updatedAt: now
+  }
+  await collection.insertOne(newCol)
+  return newCol
+}
+
+export async function updateCollection(id: string, data: Partial<any>): Promise<any | null> {
+  const collection = await getCollection(COLLECTIONS_COLLECTION)
+  const { id: _, createdAt: __, ...updateData } = data
+  updateData.updatedAt = new Date().toISOString()
+  await collection.updateOne({ id }, { $set: updateData })
+  return getCollectionById(id)
+}
+
+export async function deleteCollection(id: string): Promise<boolean> {
+  const collection = await getCollection(COLLECTIONS_COLLECTION)
+  const res = await collection.deleteOne({ id })
+  return res.deletedCount > 0
 }
