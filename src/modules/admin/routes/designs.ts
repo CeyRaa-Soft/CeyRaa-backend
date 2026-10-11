@@ -11,6 +11,14 @@ import {
 
 const router = Router()
 
+const offerSchema = z.object({
+  active: z.boolean(),
+  discountPercentage: z.number().min(0).max(100),
+  originalPrice: z.number().min(0),
+  offerPrice: z.number().min(0),
+  startDate: z.string().optional()
+})
+
 const designSchema = z.object({
   name: z.string().min(1, 'Design name is required'),
   code: z.string().optional(),
@@ -26,7 +34,10 @@ const designSchema = z.object({
     )
     .default([]),
   mediaVideoUrl: z.string().optional().nullable(),
-  mediaVideoPublicId: z.string().optional().nullable()
+  mediaVideoPublicId: z.string().optional().nullable(),
+  defaultCollection: z.enum(["Queen's Wardrobe", "King's Wardrobe"]).optional().nullable(),
+  customCollection: z.string().optional().nullable(),
+  offer: offerSchema.optional().nullable()
 })
 
 const designUpdateSchema = z.object({
@@ -42,7 +53,10 @@ const designUpdateSchema = z.object({
     )
     .optional(),
   mediaVideoUrl: z.string().optional().nullable(),
-  mediaVideoPublicId: z.string().optional().nullable()
+  mediaVideoPublicId: z.string().optional().nullable(),
+  defaultCollection: z.enum(["Queen's Wardrobe", "King's Wardrobe"]).optional().nullable(),
+  customCollection: z.string().optional().nullable(),
+  offer: offerSchema.optional().nullable()
 })
 
 router.get('/', async (req, res, next) => {
