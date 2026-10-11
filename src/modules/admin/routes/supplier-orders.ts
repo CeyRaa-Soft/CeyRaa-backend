@@ -82,6 +82,22 @@ router.get('/:id', async (req, res, next) => {
   }
 })
 
+const orderUpdateSchema = z.object({
+  id: z.string().optional(),
+  supplier: z.string().min(1, 'Supplier is required').optional(),
+  date: z.string().optional(),
+  status: z.enum(['Pending', 'Approved', 'Delivered']).optional(),
+  categories: z.array(z.any()).optional(),
+  stageImages: z
+    .array(
+      z.object({
+        url: z.string(),
+        publicId: z.string().optional()
+      })
+    )
+    .optional()
+})
+
 router.put('/:id', async (req, res, next) => {
   try {
     const existing = await getOrderById(req.params.id)
@@ -89,7 +105,7 @@ router.put('/:id', async (req, res, next) => {
       return res.status(404).json({ error: 'Order not found' })
     }
 
-    const validation = orderSchema.partial().safeParse(req.body)
+    const validation = orderUpdateSchema.safeParse(req.body)
     if (!validation.success) {
       const firstError = validation.error.issues[0]?.message || 'Validation failed'
       return res.status(400).json({

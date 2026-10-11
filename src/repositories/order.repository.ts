@@ -3,9 +3,18 @@ import type { Order } from '../types/order'
 
 const COLLECTION = 'supplier_orders'
 
+export const DEFAULT_ORDER_CATEGORIES = [
+  { id: 'production', name: 'Sewing & Tailoring (Garments)', items: [] },
+  { id: 'supplies', name: 'Fabrics & Accessories (Materials)', items: [] },
+  { id: 'other', name: 'Other Expenses (Courier, Packaging, etc.)', items: [] }
+]
+
 function cleanOrder(doc: any): Order | null {
   if (!doc) return null
   const { _id, ...rest } = doc
+  if (!rest.categories || rest.categories.length === 0) {
+    rest.categories = DEFAULT_ORDER_CATEGORIES
+  }
   return rest as Order
 }
 
