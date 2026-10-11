@@ -29,6 +29,8 @@ router.post("/", upload.single("file"), async (req, res, next) => {
     let folder = "ceyraa";
     let publicId = "";
     let transformation: any[] = [];
+    let resourceType: "image" | "video" | "raw" | "auto" = "image";
+    let outputFormat: string | undefined = "webp";
 
     if (folderParam === "stages") {
       folder = "ceyraa_stages";
@@ -39,6 +41,36 @@ router.post("/", upload.single("file"), async (req, res, next) => {
           width: 2000,
           height: 2000,
           crop: "limit", // Preserve aspect ratio, only shrink if exceeds 2000px
+          quality: "auto",
+        },
+      ];
+    } else if (folderParam === "swatches") {
+      // Swatch color icon: 200x200 square, auto crop/fill, high quality webp
+      folder = "ceyraa_swatches";
+      const cleanCode = designCode.replace(/[^a-zA-Z0-9_-]/g, "").toUpperCase();
+      const cleanColor = color.replace(/[^a-zA-Z0-9_-]/g, "");
+      publicId = `swatch_${cleanCode}_${cleanColor}_${Date.now()}`;
+      transformation = [
+        {
+          width: 200,
+          height: 200,
+          crop: "fill",
+          gravity: "auto",
+          quality: "auto",
+        },
+      ];
+    } else if (folderParam === "videos") {
+      // Showcase Video or GIF (e.g. for half-screen mobile/desktop display)
+      folder = "ceyraa_videos";
+      const cleanCode = designCode.replace(/[^a-zA-Z0-9_-]/g, "").toUpperCase();
+      publicId = `media_${cleanCode}_${Date.now()}`;
+      resourceType = "auto";
+      outputFormat = undefined; // Retain native mp4 or gif format
+      transformation = [
+        {
+          width: 1080,
+          height: 1920,
+          crop: "limit", // Limit resolution for half-screen / mobile showcase without bloated file sizes
           quality: "auto",
         },
       ];
@@ -59,25 +91,26 @@ router.post("/", upload.single("file"), async (req, res, next) => {
       ];
     }
 
-    // Upload image to Cloudinary using stream with auto transformations
+    // Upload file to Cloudinary using stream with auto transformations
+    const uploadOptions: any = {
+      folder: folder,
+      public_id: publicId,
+      resource_type: resourceType,
+      transformation: transformation,
+    };
+    if (outputFormat) {
+      uploadOptions.format = outputFormat;
+    }
+
     const uploadResult: any = await new Promise((resolve, reject) => {
-      cloudinary.uploader.upload_stream(
-        {
-          folder: folder,
-          public_id: publicId,
-          resource_type: "image",
-          format: "webp", // Force WebP storage
-          transformation: transformation,
-        },
-        (error, result) => {
-          if (error) {
-            console.error("Cloudinary upload stream error:", error);
-            reject(error);
-          } else {
-            resolve(result);
-          }
+      cloudinary.uploader.upload_stream(uploadOptions, (error, result) => {
+        if (error) {
+          console.error("Cloudinary upload stream error:", error);
+          reject(error);
+        } else {
+          resolve(result);
         }
-      ).end(buffer);
+      }).end(buffer);
     });
 
     res.json({

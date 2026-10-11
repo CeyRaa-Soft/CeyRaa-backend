@@ -20,5 +20,7 @@ export type Design = {
   name: string // e.g., "Floral crop top"
   variants: ColorVariant[] // colors and sizes with quantities
   images: DesignImage[] // images uploaded for each color variant
+  mediaVideoUrl?: string | null // Video or GIF showcase
+  mediaVideoPublicId?: string | null
   createdAt?: string
 }

@@ -24,7 +24,9 @@ const designSchema = z.object({
         publicId: z.string().optional()
       })
     )
-    .default([])
+    .default([]),
+  mediaVideoUrl: z.string().optional().nullable(),
+  mediaVideoPublicId: z.string().optional().nullable()
 })
 
 const designUpdateSchema = z.object({
@@ -38,7 +40,9 @@ const designUpdateSchema = z.object({
         publicId: z.string().optional()
       })
     )
-    .optional()
+    .optional(),
+  mediaVideoUrl: z.string().optional().nullable(),
+  mediaVideoPublicId: z.string().optional().nullable()
 })
 
 router.get('/', async (req, res, next) => {
