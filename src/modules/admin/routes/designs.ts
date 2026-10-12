@@ -35,6 +35,9 @@ const designSchema = z.object({
     .default([]),
   mediaVideoUrl: z.string().optional().nullable(),
   mediaVideoPublicId: z.string().optional().nullable(),
+  sizeChartText: z.string().optional().nullable(),
+  sizeChartImageUrl: z.string().optional().nullable(),
+  sizeChartPublicId: z.string().optional().nullable(),
   defaultCollection: z.enum(["Queen's Wardrobe", "King's Wardrobe"]).optional().nullable(),
   customCollection: z.string().optional().nullable(),
   offer: offerSchema.optional().nullable()
@@ -54,6 +57,9 @@ const designUpdateSchema = z.object({
     .optional(),
   mediaVideoUrl: z.string().optional().nullable(),
   mediaVideoPublicId: z.string().optional().nullable(),
+  sizeChartText: z.string().optional().nullable(),
+  sizeChartImageUrl: z.string().optional().nullable(),
+  sizeChartPublicId: z.string().optional().nullable(),
   defaultCollection: z.enum(["Queen's Wardrobe", "King's Wardrobe"]).optional().nullable(),
   customCollection: z.string().optional().nullable(),
   offer: offerSchema.optional().nullable()
