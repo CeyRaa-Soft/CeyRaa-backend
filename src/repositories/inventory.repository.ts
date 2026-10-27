@@ -176,6 +176,7 @@ export async function createDesign(
     code,
     variants: data.variants || [],
     images: data.images || [],
+    defaultCollection: data.defaultCollection || "Queen's Wardrobe",
     createdAt: new Date().toISOString()
   }
 
@@ -188,6 +189,9 @@ export async function updateDesign(id: string, data: Partial<Design>): Promise<D
   const collection = await getCollection(DESIGN_COLLECTION)
 
   updateData.updatedAt = new Date().toISOString()
+  if (updateData.customCollection === '' || updateData.customCollection === null) {
+    updateData.customCollection = null
+  }
   await collection.updateOne({ id }, { $set: updateData })
 
   // If customCollection was updated or present, bump collection updatedAt
@@ -198,7 +202,7 @@ export async function updateDesign(id: string, data: Partial<Design>): Promise<D
         { name: updateData.customCollection },
         { $set: { updatedAt: new Date().toISOString() } }
       )
-    } catch (e) {
+    } catch {
       // ignore
     }
   }
@@ -245,7 +249,9 @@ export async function adjustDesignStock(
    ========================================================================== */
 const COLLECTIONS_COLLECTION = 'collections'
 
-export async function getCollections(): Promise<(any & { designCount: number; latestDesignImage?: string })[]> {
+export async function getCollections(): Promise<
+  (any & { designCount: number; latestDesignImage?: string })[]
+> {
   const collection = await getCollection(COLLECTIONS_COLLECTION)
   const designCol = await getCollection(DESIGN_COLLECTION)
 
@@ -281,7 +287,11 @@ export async function getCollectionById(id: string): Promise<any | null> {
   return cleanDoc(doc)
 }
 
-export async function createCollection(data: { name: string; description?: string; imageUrl?: string }): Promise<any> {
+export async function createCollection(data: {
+  name: string
+  description?: string
+  imageUrl?: string
+}): Promise<any> {
   const collection = await getCollection(COLLECTIONS_COLLECTION)
   const now = new Date().toISOString()
   const newCol = {
