@@ -173,7 +173,8 @@ router.post('/:id/add-to-inventory', async (req, res, next) => {
           categoryId,
           code: code || undefined,
           variants: variantsToUse, // Quantities, sizes, and custom selling prices
-          images: images || []
+          images: images || [],
+          defaultCollection: "Queen's Wardrobe"
         })
       } else if (action === 'merge') {
         // Merge quantities with an existing design

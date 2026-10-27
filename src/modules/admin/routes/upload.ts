@@ -60,7 +60,7 @@ router.post('/', upload.single('file'), async (req, res, next) => {
         }
       ]
     } else if (folderParam === 'videos') {
-      // Showcase Video or GIF (e.g. for half-screen mobile/desktop display)
+      // Showcase Video or GIF (e.g. for color variant animations)
       folder = 'ceyraa_videos'
       const cleanCode = designCode.replace(/[^a-zA-Z0-9_-]/g, '').toUpperCase()
       publicId = `media_${cleanCode}_${Date.now()}`
@@ -70,8 +70,23 @@ router.post('/', upload.single('file'), async (req, res, next) => {
         {
           width: 1080,
           height: 1920,
-          crop: 'limit', // Limit resolution for half-screen / mobile showcase without bloated file sizes
+          crop: 'limit',
           quality: 'auto'
+        }
+      ]
+    } else if (folderParam === 'size-charts') {
+      // Size Chart diagram or photo: preserve original dimensions and resolution without cropping
+      folder = 'ceyraa_size_charts'
+      const cleanCode = designCode.replace(/[^a-zA-Z0-9_-]/g, '').toUpperCase()
+      publicId = `sizechart_${cleanCode}_${Date.now()}`
+      resourceType = 'image'
+      outputFormat = undefined // Keep original format (e.g. PNG / JPG) for maximum sharpness of tables and numbers
+      transformation = [
+        {
+          width: 3840,
+          height: 3840,
+          crop: 'limit', // Only cap at 4K if massive, zero cropping
+          quality: 'auto:best'
         }
       ]
     } else {
