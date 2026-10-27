@@ -177,6 +177,7 @@ export async function createDesign(
     variants: data.variants || [],
     images: data.images || [],
     defaultCollection: data.defaultCollection || "Queen's Wardrobe",
+    availableSizes: data.availableSizes || null,
     createdAt: new Date().toISOString()
   }
 

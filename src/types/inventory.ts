@@ -39,6 +39,10 @@ export type Design = {
   images: DesignImage[] // images uploaded for each color variant
   mediaVideoUrl?: string | null // Video or GIF showcase
   mediaVideoPublicId?: string | null
+  sizeChartText?: string | null
+  sizeChartImageUrl?: string | null
+  sizeChartPublicId?: string | null
+  availableSizes?: string[] | null
   defaultCollection?: "Queen's Wardrobe" | "King's Wardrobe" | null
   customCollection?: string | null // name of custom collection
   offer?: DesignOffer | null
