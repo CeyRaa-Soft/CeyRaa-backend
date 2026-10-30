@@ -38,6 +38,7 @@ const designSchema = z.object({
   sizeChartText: z.string().optional().nullable(),
   sizeChartImageUrl: z.string().optional().nullable(),
   sizeChartPublicId: z.string().optional().nullable(),
+  availableSizes: z.array(z.string()).optional().nullable(),
   defaultCollection: z.enum(["Queen's Wardrobe", "King's Wardrobe"]).optional().nullable(),
   customCollection: z.string().optional().nullable(),
   offer: offerSchema.optional().nullable()
@@ -60,6 +61,7 @@ const designUpdateSchema = z.object({
   sizeChartText: z.string().optional().nullable(),
   sizeChartImageUrl: z.string().optional().nullable(),
   sizeChartPublicId: z.string().optional().nullable(),
+  availableSizes: z.array(z.string()).optional().nullable(),
   defaultCollection: z.enum(["Queen's Wardrobe", "King's Wardrobe"]).optional().nullable(),
   customCollection: z.string().optional().nullable(),
   offer: offerSchema.optional().nullable()
