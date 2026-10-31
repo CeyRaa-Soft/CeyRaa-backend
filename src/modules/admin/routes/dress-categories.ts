@@ -12,17 +12,21 @@ const router = Router()
 
 const categorySchema = z.object({
   name: z.string().min(1, 'Category name is required'),
-  prefix: z.string().optional()
+  prefix: z.string().optional(),
+  wardrobeType: z.enum(["Queen's Wardrobe", "King's Wardrobe"]).optional()
 })
 
 const categoryUpdateSchema = z.object({
   name: z.string().min(1, 'Category name is required').optional(),
-  prefix: z.string().optional()
+  prefix: z.string().optional(),
+  wardrobeType: z.enum(["Queen's Wardrobe", "King's Wardrobe"]).optional()
 })
 
-router.get('/', async (_req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
-    const categories = await getDressCategories()
+    const wardrobeType =
+      typeof req.query.wardrobeType === 'string' ? req.query.wardrobeType : undefined
+    const categories = await getDressCategories(wardrobeType)
     res.json(categories)
   } catch (error: any) {
     next(error)

@@ -32,16 +32,42 @@ function normalizeCategoryName(name: string): string {
    Dress Category Repository Operations
    ========================================================================== */
 
-export async function getDressCategories(): Promise<DressCategory[]> {
+export async function getDressCategories(wardrobeType?: string): Promise<DressCategory[]> {
   const collection = await getCollection(CATEGORY_COLLECTION)
-  const docs = await collection.find({}).sort({ name: 1 }).toArray()
-  return docs.map(cleanDoc) as DressCategory[]
+  let query: any = {}
+  if (wardrobeType) {
+    if (wardrobeType === "King's Wardrobe") {
+      query = { wardrobeType: "King's Wardrobe" }
+    } else if (wardrobeType === "Queen's Wardrobe") {
+      query = {
+        $or: [
+          { wardrobeType: "Queen's Wardrobe" },
+          { wardrobeType: { $exists: false } },
+          { wardrobeType: null }
+        ]
+      }
+    } else {
+      query = { wardrobeType }
+    }
+  }
+  const docs = await collection.find(query).sort({ name: 1 }).toArray()
+  return docs.map((doc: any) => {
+    const cleaned = cleanDoc<DressCategory>(doc)
+    if (cleaned && !cleaned.wardrobeType) {
+      cleaned.wardrobeType = "Queen's Wardrobe"
+    }
+    return cleaned
+  }) as DressCategory[]
 }
 
 export async function getDressCategoryById(id: string): Promise<DressCategory | null> {
   const collection = await getCollection(CATEGORY_COLLECTION)
   const doc = await collection.findOne({ id })
-  return cleanDoc<DressCategory>(doc)
+  const cleaned = cleanDoc<DressCategory>(doc)
+  if (cleaned && !cleaned.wardrobeType) {
+    cleaned.wardrobeType = "Queen's Wardrobe"
+  }
+  return cleaned
 }
 
 export async function getNextCategoryIncrementId(name: string): Promise<string> {
@@ -74,6 +100,7 @@ export async function createDressCategory(
     ...data,
     id: nextId,
     prefix,
+    wardrobeType: data.wardrobeType || "Queen's Wardrobe",
     createdAt: new Date().toISOString()
   }
 
@@ -169,6 +196,8 @@ export async function createDesign(
 
   const code = data.code ? data.code.toUpperCase() : await getNextDesignShortCode(category.prefix)
   const id = data.id || `des_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`
+  const inheritedWardrobe =
+    category.wardrobeType || (data.defaultCollection as any) || "Queen's Wardrobe"
 
   const newDesign: Design = {
     ...data,
@@ -176,7 +205,7 @@ export async function createDesign(
     code,
     variants: data.variants || [],
     images: data.images || [],
-    defaultCollection: data.defaultCollection || "Queen's Wardrobe",
+    defaultCollection: data.defaultCollection || inheritedWardrobe,
     availableSizes: data.availableSizes || null,
     createdAt: new Date().toISOString()
   }

@@ -4,6 +4,7 @@ export type DressCategory = {
   id: string // e.g., "Short001", "CropTop03", "Dress002"
   name: string // e.g., "Shorts", "Crop Tops", "Dresses"
   prefix: string // e.g., "SHRT", "CROP", "DRS"
+  wardrobeType?: "Queen's Wardrobe" | "King's Wardrobe"
   createdAt?: string
 }
 
